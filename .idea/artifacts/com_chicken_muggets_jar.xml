@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="com.chicken-muggets:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/com_chicken_muggets_jar</output-path>
+    <root id="archive" name="com.chicken-muggets.jar">
+      <element id="module-output" name="com.chicken-muggets" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/flatlaf lib/flatlaf-3.4.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
