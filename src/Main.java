@@ -8,6 +8,8 @@ import java.io.*;
 import java.util.Objects;
 
 public class Main {
+    //ImageIcon logo = new ImageIcon(".//res//icon.png");
+    ImageIcon logo = new ImageIcon(getClass().getClassLoader().getResource("icon.png"));
     public static Boolean TextHasAlreadyBeenTypedIn = false;
     public static Boolean darkMode = true;
     public static Boolean NumberHasAlreadyBeenTypedIn = false;
@@ -44,11 +46,15 @@ public class Main {
         } else {
             FlatLightLaf.setup();
         }
-        JFrame frame = new JFrame("Autotyper v6 (Coded in java)");
+        //frame
+        JFrame frame = new JFrame("Autotyper v6 Java");
         frame.setSize(230, 250);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
         frame.setResizable(false);
+        Main test = new Main();
+        frame.setIconImage(test.logo.getImage());
+
         //Main text code
         //This is largely useless and may be removed before project is finished
         JLabel mainLabel = new JLabel("Autotyper v6 (made in java)");
