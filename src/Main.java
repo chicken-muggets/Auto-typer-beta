@@ -216,11 +216,16 @@ public class Main {
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
                 System.out.println("starting spamming");
                 try {
                     Robot robot = new Robot();
 
-                    String text = "Hello, World";
+                    String text = typeContents.getText();
                     for (char c : text.toCharArray()) {
                         int keyCode = KeyEvent.getExtendedKeyCodeForChar(c);
                         if (KeyEvent.CHAR_UNDEFINED == keyCode) {
