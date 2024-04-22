@@ -7,6 +7,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.Objects;
 
+
 public class Main {
     //ImageIcon logo = new ImageIcon(".//res//icon.png");
     ImageIcon logo = new ImageIcon(getClass().getClassLoader().getResource("icon.png"));
@@ -94,7 +95,7 @@ public class Main {
             changeColorMode.setText("Change to dark mode");
         }
 
-
+        Robot robot = new Robot();
         //start
         JButton start = new JButton("Start");
         start.setBounds(25,150,160,20);
@@ -106,8 +107,8 @@ public class Main {
         frame.add(enter);
         frame.add(changeColorMode);
         frame.add(start);
-
         //action code
+
         changeColorMode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -210,6 +211,29 @@ public class Main {
             }
             @Override
             public void keyReleased(KeyEvent e) {
+            }
+        });
+        start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("starting spamming");
+                try {
+                    Robot robot = new Robot();
+
+                    String text = "Hello, World";
+                    for (char c : text.toCharArray()) {
+                        int keyCode = KeyEvent.getExtendedKeyCodeForChar(c);
+                        if (KeyEvent.CHAR_UNDEFINED == keyCode) {
+                            throw new RuntimeException(
+                                    "Key code not found for character '" + c + "'");
+                        }
+                        robot.keyPress(keyCode);
+                        robot.keyRelease(keyCode);
+                        robot.delay(100);  // Add delay between keystrokes, if needed
+                    }
+                } catch (Exception a) {
+                    a.printStackTrace();
+                }
             }
         });
         //place at bottom
