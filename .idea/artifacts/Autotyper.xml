@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Autotyper">
+    <output-path>$PROJECT_DIR$/out/artifacts/Autotyper</output-path>
+    <root id="archive" name="Autotyper.jar">
+      <element id="library" level="project" name="flatlaf-3.4.1" />
+    </root>
+  </artifact>
+</component>

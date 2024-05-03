@@ -7,24 +7,28 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.Objects;
 
-
 public class Main {
-    //ImageIcon logo = new ImageIcon(".//res//icon.png");
-    ImageIcon logo = new ImageIcon(getClass().getClassLoader().getResource("icon.png"));
+
+    ImageIcon logo = new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("icon.png")));
     public static Boolean TextHasAlreadyBeenTypedIn = false;
     public static Boolean darkMode = true;
     public static Boolean NumberHasAlreadyBeenTypedIn = false;
-    public static void main(String[] args) throws AWTException, IOException {
-        File ColorModeSetupDecter = new File("ColorMode.cfg");
-        if (!ColorModeSetupDecter.exists()) {
-            BufferedWriter creater = new BufferedWriter(new FileWriter("ColorMode.cfg"));
+    public static void main(String[] args) throws AWTException, IOException, InterruptedException {
+        Keyboard keyboard = new Keyboard();
+        File settingsFolderSetupDector = new File("Settings");
+        if (!settingsFolderSetupDector.exists()) {
+            settingsFolderSetupDector.mkdir();
+        }
+        File colorModeSetupDector = new File("Settings\\ColorMode.cfg");
+        if (!colorModeSetupDector.exists()) {
+            BufferedWriter creater = new BufferedWriter(new FileWriter("Settings\\ColorMode.cfg"));
             creater.close();
         }
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("ColorMode.cfg"));
+            BufferedReader reader = new BufferedReader(new FileReader("Settings\\ColorMode.cfg"));
             if (reader.readLine() == null) {
                 try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter("ColorMode.cfg"));
+                    BufferedWriter writer = new BufferedWriter(new FileWriter("Settings\\ColorMode.cfg"));
                     writer.write("ColorMode: light");
                     writer.close();
                 } catch (IOException e) {
@@ -35,7 +39,7 @@ public class Main {
         } catch (IOException e) {
             System.out.println("error");
         }
-        BufferedReader reader = new BufferedReader(new FileReader("ColorMode.cfg"));
+        BufferedReader reader = new BufferedReader(new FileReader("Settings\\ColorMode.cfg"));
         if (Objects.equals(reader.readLine(), "ColorMode: light")) {
             darkMode = false;
         } else if (Objects.equals(reader.readLine(), "ColorMode: dark")) {
@@ -55,9 +59,6 @@ public class Main {
         frame.setResizable(false);
         Main test = new Main();
         frame.setIconImage(test.logo.getImage());
-
-        //Main text code
-        //This is largely useless and may be removed before project is finished
         JLabel mainLabel = new JLabel("Autotyper v6 (made in java)");
         mainLabel.setBounds(25,5,300,18);
         mainLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -69,9 +70,6 @@ public class Main {
         typeContents.setText("what would you like to type");
         typeContents.setBounds(25,40,160,20);
         typeContents.setHorizontalAlignment(SwingConstants.CENTER);
-
-
-
         //amount it should type
 
         JFormattedTextField amountToType = new JFormattedTextField();
@@ -94,8 +92,6 @@ public class Main {
         } else {
             changeColorMode.setText("Change to dark mode");
         }
-
-        Robot robot = new Robot();
         //start
         JButton start = new JButton("Start");
         start.setBounds(25,150,160,20);
@@ -108,16 +104,39 @@ public class Main {
         frame.add(changeColorMode);
         frame.add(start);
         //action code
+        start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+                for (double i = Double.parseDouble(amountToType.getText()); i > 0; i--) {
+                    keyboard.type(typeContents.getText());
+                    if (enter.isSelected()) {
+                        keyboard.type("\n");
+                    }
+                    Point p = MouseInfo.getPointerInfo().getLocation();
+                    System.out.println(p.x + " " + p.y);
+                    if (p.x == 0 && p.y == 0) {
+                        System.out.println("stopping");
+                        break;
 
+                    }
+                }
+            }
+        });
         changeColorMode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
                 if (!darkMode) {
                     try {
-                        BufferedWriter writer = new BufferedWriter(new FileWriter("ColorMode.cfg"));
+                        BufferedWriter writer = new BufferedWriter(new FileWriter("Settings\\ColorMode.cfg"));
                         writer.write("ColorMode: dark");
                         writer.close();
+
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -135,7 +154,7 @@ public class Main {
                     changeColorMode.setText("Change to dark mode");
                     darkMode = false;
                     try {
-                        BufferedWriter writer = new BufferedWriter(new FileWriter("ColorMode.cfg"));
+                        BufferedWriter writer = new BufferedWriter(new FileWriter("Settings\\ColorMode.cfg"));
                         writer.write("ColorMode: light");
                         writer.close();
                     } catch (IOException ex) {
@@ -211,34 +230,6 @@ public class Main {
             }
             @Override
             public void keyReleased(KeyEvent e) {
-            }
-        });
-        start.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
-                System.out.println("starting spamming");
-                try {
-                    Robot robot = new Robot();
-
-                    String text = typeContents.getText();
-                    for (char c : text.toCharArray()) {
-                        int keyCode = KeyEvent.getExtendedKeyCodeForChar(c);
-                        if (KeyEvent.CHAR_UNDEFINED == keyCode) {
-                            throw new RuntimeException(
-                                    "Key code not found for character '" + c + "'");
-                        }
-                        robot.keyPress(keyCode);
-                        robot.keyRelease(keyCode);
-                        robot.delay(100);  // Add delay between keystrokes, if needed
-                    }
-                } catch (Exception a) {
-                    a.printStackTrace();
-                }
             }
         });
         //place at bottom
